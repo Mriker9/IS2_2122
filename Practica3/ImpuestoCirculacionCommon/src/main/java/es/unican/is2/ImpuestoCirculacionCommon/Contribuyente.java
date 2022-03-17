@@ -17,8 +17,11 @@ public class Contribuyente implements Serializable {
      * @return Valor del impuesto a pagar
      */
     public double totalAPagar() {
-    	//TODO
-    	return 0;
+    	double total = 0;
+    	for (Vehiculo v : vehiculos) {
+    		total += v.precioImpuesto();
+    	}
+    	return total;
     }
     
     /**

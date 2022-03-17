@@ -1,5 +1,6 @@
 package es.unican.is2.ImpuestoCirculacionCommon;
 import java.io.Serializable;
+import java.time.LocalDate;
 
 @SuppressWarnings("serial")
 public class Turismo
@@ -23,8 +24,17 @@ public class Turismo
      */
 	@Override
     public double precioImpuesto() {
-		// TODO
-    	return 0;
+		if (LocalDate.now().getYear() - 
+				this.getFechaMatriculacion().getYear() > 25) {
+			return 0;
+		}
+		
+		double impuesto = 224.00;
+		if (potencia < 20) {impuesto = 179.22;}
+		if (potencia < 16) {impuesto = 143.88;}
+		if (potencia < 12) {impuesto = 68.16;}
+		if (potencia < 8) {impuesto = 25.24;}
+    	return impuesto;
     }
     
 }
