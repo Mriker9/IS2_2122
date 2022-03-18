@@ -44,8 +44,8 @@ public class GestionImpuestoCirculacion implements IGestionContribuyentes, IGest
 
 	public Vehiculo altaVehiculo(Vehiculo v, String dni) throws OperacionNoValida {
 		if (contribuyentes.contribuyente(dni) == null) {return null;}
-		
 		if (vehiculos.creaVehiculo(v) != null) {
+			contribuyentes.contribuyente(dni).getVehiculos().add(v);
 			return v;
 		} else {
 			throw new OperacionNoValida("El vehiculo ya esta añadido");
@@ -55,9 +55,9 @@ public class GestionImpuestoCirculacion implements IGestionContribuyentes, IGest
 	//@Override
 	public Vehiculo bajaVehiculo(String matricula, String dni) throws OperacionNoValida {
 		if (contribuyentes.contribuyente(dni) == null) {return null;}
-		if (!contribuyentes.contribuyente(dni).getVehiculos().contains(vehiculos.vehiculo(matricula))){
+		if (!contribuyentes.contribuyente(dni).getVehiculos().remove(vehiculos.vehiculo(matricula))){
 			throw new OperacionNoValida("El vehiculo no pertenece al dni indicado");
-		}
+		} 
 		return vehiculos.eliminaVehiculo(matricula);
 	}
 
