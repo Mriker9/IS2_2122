@@ -9,6 +9,12 @@ public class Turismo
 
 	private double potencia;
 	
+	public Turismo(String matricula, LocalDate fecha, int potencia) {
+		super(matricula, fecha);
+		this.potencia = potencia;
+	}
+
+
 	/**
 	 * Retorna la potencia del turismo
 	 * @return potencia en caballos fiscales

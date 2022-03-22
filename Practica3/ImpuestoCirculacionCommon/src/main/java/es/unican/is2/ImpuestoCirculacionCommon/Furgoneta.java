@@ -5,12 +5,23 @@ import java.time.LocalDate;
 public class Furgoneta
     extends Turismo implements Serializable
 {
-    
-    private double potencia;
+
+	private double potencia;
     private boolean comercial;
     private static final double BONIFICACION = 0.2;
     
-   /**
+   
+    /**
+     * Constructor furgoneta
+     * @param matricula
+     * @param fecha
+     * @param potencia
+     */
+    public Furgoneta(String matricula, LocalDate fecha, int potencia) {
+		super(matricula, fecha, potencia);
+	}
+    
+    /**
     * Retorna el valor del atributo comercial
     * @return true si la furgoneta es de uso comercial
     *         false si no es de uso comercial

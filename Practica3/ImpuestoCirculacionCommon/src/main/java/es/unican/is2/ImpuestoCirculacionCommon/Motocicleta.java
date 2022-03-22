@@ -5,8 +5,20 @@ import java.time.LocalDate;
 @SuppressWarnings("serial")
 public class Motocicleta extends Vehiculo
 {
-	private int cilindrada;
 
+	private int cilindrada;
+	
+	/**
+	 * Constructor Motocicleta
+	 * @param matricula
+	 * @param fecha
+	 * @param cilindrada
+	 */
+	public Motocicleta(String matricula, LocalDate fecha, int cilindrada) {
+		super(matricula, fecha);
+		this.cilindrada = cilindrada;
+	}
+	
     /**
      * Retorna la cilindrada de la motocicleta
      * @return cilindrada

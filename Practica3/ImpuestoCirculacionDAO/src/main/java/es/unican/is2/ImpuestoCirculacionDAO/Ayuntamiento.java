@@ -17,7 +17,7 @@ import java.util.List;
 public class Ayuntamiento implements Serializable {
 	
 	// Path absoluto al fichero de almacenamiento (reemplazar si cambia)
-	public static String DATA_FILE = "C:\\Temp\\ayuntamiento.out";
+	public static String DATA_FILE = "C:\\Users\\Usuario\\WorkSpace\\GitWorkspace\\IS2\\IS2_2122\\Practica3\\ayuntamiento.out";
 
 	private List<Contribuyente> contribuyentes;
 
