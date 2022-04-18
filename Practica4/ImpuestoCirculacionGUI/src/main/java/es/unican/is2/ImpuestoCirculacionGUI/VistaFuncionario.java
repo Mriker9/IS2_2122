@@ -32,7 +32,9 @@ public class VistaFuncionario extends JFrame {
 	private DefaultListModel<String> listModel;
 	private JButton btnBuscar;
 
+	@SuppressWarnings("unused")
 	private IGestionContribuyentes contribuyentes;
+	@SuppressWarnings("unused")
 	private IGestionVehiculos vehiculos;
 	private IInfoImpuestoCirculacion info;
 
@@ -118,17 +120,17 @@ public class VistaFuncionario extends JFrame {
 		Contribuyente c = info.contribuyente(dni);
 		if (c != null) {
 			txtNombreContribuyente.setText(c.getNombre() + " " + c.getApellido1() + " " + c.getApellido2());
-			txtTotalContribuyente.setText(c.getNombre());
+			txtTotalContribuyente.setText(Double.toString(c.totalAPagar()));  //Cambio, antes mostraba el nombre
 			listModel.removeAllElements();
-			for (int i = 0; i < c.getVehiculos().size() - 1; i++) {
+			for (int i = 0; i < c.getVehiculos().size(); i++) { //Cambio, le quito el -1 que sobraba del size
 				Vehiculo v = c.getVehiculos().get(i);
 				listModel.addElement(v.getMatricula());
 			}
 		} else {
-			txtNombreContribuyente.setText("DNI No V�lido");
+			txtNombreContribuyente.setText("DNI No Valido");
 			txtTotalContribuyente.setText("0");
 			listModel.removeAllElements();
-		}
+		} 
 
 	}
 }
