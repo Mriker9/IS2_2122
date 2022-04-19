@@ -12,7 +12,7 @@ import java.time.LocalDate;
 
 public class RellenaAyuntamiento {
 	
-	private static final String FILE_PATH =  "C:\\Users\\Usuario\\WorkSpace\\GitWorkspace\\IS2\\IS2_2122\\Practica3\\ayuntamiento.out";
+	private static final String FILE_PATH =  "C:\\Users\\Usuario\\WorkSpace\\GitWorkspace\\IS2\\IS2_2122\\Practica4\\ayuntamiento.out";
 
 	public static void main(String args[]) throws DatoInvalido {
 		
