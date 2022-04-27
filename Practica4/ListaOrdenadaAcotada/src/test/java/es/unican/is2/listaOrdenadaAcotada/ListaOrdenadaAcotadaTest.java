@@ -81,6 +81,15 @@ public class ListaOrdenadaAcotadaTest {
 		
 		list.add(2);
 		list.add(3);
+		list.add(4);
+		
+		try {
+			list.remove(0);
+		} catch (IndexOutOfBoundsException e) {
+			fail("No debería saltar ninguna excepción");
+		}
+		
+		assertTrue(list.size() == 2);
 		
 		try {
 			list.remove(-1);
@@ -88,7 +97,7 @@ public class ListaOrdenadaAcotadaTest {
 		} catch (IndexOutOfBoundsException e) {}
 		
 		try {
-			list.remove(4);
+			list.remove(3);
 			fail();
 		} catch (IndexOutOfBoundsException e) {}
 	}

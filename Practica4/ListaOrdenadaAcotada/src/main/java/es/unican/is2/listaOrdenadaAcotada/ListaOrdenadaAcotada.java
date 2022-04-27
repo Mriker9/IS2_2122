@@ -12,6 +12,7 @@ public class ListaOrdenadaAcotada<E extends Comparable<E>> implements IListaOrde
 	 * 
 	 * @param max Capacidad maxima de la lista
 	 */
+	@SuppressWarnings("unchecked")
 	public ListaOrdenadaAcotada(int max) {
 		lista = (E[]) new Comparable[max];
 		ultimo = -1;
@@ -26,7 +27,7 @@ public class ListaOrdenadaAcotada<E extends Comparable<E>> implements IListaOrde
 
 	public E get(int indice) {
 		
-		if (ultimo == -1 || indice > this.size()) {		//ESto es mio jj
+		if (ultimo == -1 || indice > this.size()) {
 			throw new IndexOutOfBoundsException();
 		}
 		return lista[indice];
