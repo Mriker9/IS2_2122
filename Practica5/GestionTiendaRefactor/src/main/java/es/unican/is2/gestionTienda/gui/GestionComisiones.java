@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.logging.Logger;
 
 import es.unican.is2.gestionTienda.Tienda;
 import es.unican.is2.gestionTienda.Vendedor;
@@ -13,17 +14,49 @@ import fundamentos.Lectura;
 import fundamentos.Mensaje;
 
 /**
- * Gestión de las comisiones de vendedores de una tienda
+ * Gestiï¿½n de las comisiones de vendedores de una tienda
  */
 public class GestionComisiones {
+
+	// opciones del menu
+	static final int NUEVA_VENTA = 0; 
+	static final int VENDEDOR_DEL_MES = 1; 
+	static final int VENDEDORES = 2; 
+	static final int SALIR = 3;
+	private static final  String ERROR = "ERROR";
+	static Logger logger = Logger.getLogger("MyLog");
+	private static boolean exit = false;
 
 	/**
 	 * Programa principal basado en menu
 	 */
 	public static void main(String[] args) {
-		// opciones del menu
-		final int NUEVA_VENTA = 0, VENDEDOR_DEL_MES = 1, VENDEDORES = 2;
 
+
+		// crea la tienda
+		Tienda tienda = new Tienda("C:\\Temp\\datosTienda.txt");
+
+		// crea la ventana de menu
+		Menu menu = new Menu("Comisiones tienda");
+		menu.insertaOpcion("Aï¿½adir venta", NUEVA_VENTA);
+		menu.insertaOpcion("Vendedor del mes", VENDEDOR_DEL_MES);
+		menu.insertaOpcion("Vendedores por ventas", VENDEDORES);
+		menu.insertaOpcion("SALIR", SALIR);
+		int opcion;
+
+		// lazo de espera de comandos del usuario
+		while (!exit) {
+			opcion = menu.leeOpcion();
+			// realiza las acciones dependiendo de la opcion elegida
+			menu(tienda, opcion);
+		}
+	}
+
+	/**
+	 * @param tienda
+	 * @param opcion
+	 */
+	private static void menu(Tienda tienda, int opcion) {
 		// variables auxiliares
 		String dni;
 		Lectura lect;
@@ -32,65 +65,50 @@ public class GestionComisiones {
 		List<Vendedor> resultado;
 		String msj;
 
-		// crea la tienda
-		Tienda tienda = new Tienda("C:\\Temp\\datosTienda.txt");
-
-		// crea la ventana de menu
-		Menu menu = new Menu("Comisiones tienda");
-		menu.insertaOpcion("Añadir venta", NUEVA_VENTA);
-		menu.insertaOpcion("Vendedor del mes", VENDEDOR_DEL_MES);
-		menu.insertaOpcion("Vendedores por ventas", VENDEDORES);
-		int opcion;
-
-		// lazo de espera de comandos del usuario
-		while (true) {
-			opcion = menu.leeOpcion();
-
-			// realiza las acciones dependiendo de la opcion elegida
-			switch (opcion) {
-			case NUEVA_VENTA:
-				lect = new Lectura("Datos Venta");
-				lect.creaEntrada("Id Vendedor", "");
-				lect.creaEntrada("Importe", "");
-				lect.esperaYCierra();
-				dni = lect.leeString("Id Vendedor");
-				double importe = lect.leeDouble("Importe");
-				try {
-					if (!tienda.anhadeVenta(dni, importe)) {
-						mensaje("ERROR", "El vendedor no existe");
-					}
-				} catch (IOException e) {
-					mensaje("ERROR", "No se pudo guardar el cambio");
+		switch (opcion) {
+		case NUEVA_VENTA:
+			lect = new Lectura("Datos Venta");
+			lect.creaEntrada("Id Vendedor", "");
+			lect.creaEntrada("Importe", "");
+			lect.esperaYCierra();
+			dni = lect.leeString("Id Vendedor");
+			double importe = lect.leeDouble("Importe");
+			try {
+				if (!tienda.anhadeVenta(dni, importe)) {
+					mensaje(ERROR, "El vendedor no existe");
 				}
-				break;
+			} catch (IOException e) {
+				mensaje(ERROR, "No se pudo guardar el cambio");
+			}
+			break;
 
-			case VENDEDOR_DEL_MES:
-
-				vendedores = tienda.vendedores();
-				resultado = new LinkedList<Vendedor>();
-				double maxVentas = 0.0;
-				for (Vendedor v : vendedores) {
-					if (v.getTotalVentas() > maxVentas) {
-						maxVentas = v.getTotalVentas();
-						resultado.clear();
-						resultado.add(v);
-					} else if (v.getTotalVentas() == maxVentas) {
-						resultado.add(v);
-					}
-				}
-
-				msj = "";
-				for (Vendedor vn : resultado) {
-					msj += vn.getNombre() + "\n";
-				}
-				mensaje("VENDEDORES DEL MES", msj);
-				break;
-
-			
-		case VENDEDORES:
+		case VENDEDOR_DEL_MES:
 
 			vendedores = tienda.vendedores();
-			System.out.println(vendedores.size());
+			resultado = new LinkedList<Vendedor>();
+			double maxVentas = 0.0;
+			for (Vendedor v : vendedores) {
+				if (v.getTotalVentas() > maxVentas) {
+					maxVentas = v.getTotalVentas();
+					resultado.clear();
+					resultado.add(v);
+				} else if (v.getTotalVentas() == maxVentas) {
+					resultado.add(v);
+				}
+			}
+
+			msj = "";
+			for (Vendedor vn : resultado) {
+				msj += vn.getNombre() + "\n";
+			}
+			mensaje("VENDEDORES DEL MES", msj);
+			break;
+
+
+		case VENDEDORES:
+			vendedores = tienda.vendedores();
+			String tamanhoVendedores = Integer.toString(vendedores.size());
+			logger.info(tamanhoVendedores);
 			Collections.sort(vendedores, new ComparadorVendedorVentas());			
 			msj = "";
 			for (Vendedor vn : vendedores) {
@@ -98,7 +116,13 @@ public class GestionComisiones {
 			}
 			mensaje("VENDEDORES", msj);
 			break;
-		}
+		case SALIR:
+			exit = true;
+			System.exit(-1);
+			break;
+		default:
+			mensaje(ERROR, "Error en la seleccion de menu");
+			System.exit(-1);
 		}
 	}
 
@@ -112,7 +136,7 @@ public class GestionComisiones {
 		msj.escribe(txt);
 
 	}
-	
+
 	public static class ComparadorVendedorVentas implements Comparator<Vendedor>  {
 
 		public int compare(Vendedor o1, Vendedor o2) {
@@ -122,8 +146,8 @@ public class GestionComisiones {
 				return 1;
 			return 0;
 		}
-		
+
 	}
-	
-	
+
+
 }

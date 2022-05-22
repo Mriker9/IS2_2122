@@ -6,7 +6,7 @@ public class vendedorEnPracticas extends Vendedor {
 	private String dni;
 	
 	/**
-	 * Retorna un nuevo vendedor en prácticas
+	 * Retorna un nuevo vendedor en prï¿½cticas
 	 * @param nombre
 	 * @param dni
 	 */
@@ -25,5 +25,10 @@ public class vendedorEnPracticas extends Vendedor {
 			return false;
 		vendedorEnPracticas v = (vendedorEnPracticas) obj;
 		return (v.getId().equals(getId()) && v.getDni().equals(getDni()));
+	}
+	
+	@Override
+	public int hashCode() {
+		return super.hashCode();
 	}
 }

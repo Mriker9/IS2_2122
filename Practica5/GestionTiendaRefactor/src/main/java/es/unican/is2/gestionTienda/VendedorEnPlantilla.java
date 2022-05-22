@@ -33,4 +33,9 @@ public class VendedorEnPlantilla extends Vendedor {
 		VendedorEnPlantilla v = (VendedorEnPlantilla) obj;
 		return (v.getId().equals(getId()) && v.getDni().equals(getDni()));
 	}
+	
+	@Override
+	public int hashCode() {
+		return super.hashCode();
+	}
 }

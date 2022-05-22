@@ -18,11 +18,14 @@ import java.util.Scanner;
  */
 public class Tienda {
 
-	private LinkedList<Vendedor> lista = new LinkedList<Vendedor>();
+	private LinkedList<Vendedor> lista = new LinkedList<>();
 	private String direccion;
 	private String nombre;
 
 	private String datos;
+	
+	private static final String JUNIOR = "Junior";
+	private static final String PRACTICAS = "Pr�cticas";
 
 	/**
 	 * Crea la tienda cargando los datos desde el fichero indicado
@@ -119,11 +122,10 @@ public class Tienda {
 	 */
 	public Vendedor buscaVendedor(String id) {		// WMC + 1
 
-		lista = new LinkedList<Vendedor>();
-		Scanner in = null;
-		try {
-			// abre el fichero
-			in = new Scanner(new FileReader(datos));
+		lista = new LinkedList<>();
+		// abre el fichero
+		try (Scanner in = new Scanner(new FileReader(datos))) {
+			
 			// configura el formato de n�meros
 			in.useLocale(Locale.ENGLISH);
 			nombre = in.nextLine();
@@ -131,17 +133,13 @@ public class Tienda {
 			in.next();
 
 			// lee los vendedores senior
-			addVendedor("Junior", in, TipoVendedor.SENIOR);
+			addVendedor(JUNIOR, in, TipoVendedor.SENIOR);
 			// lee los vendedores junior
-			addVendedor("Pr�cticas", in, TipoVendedor.JUNIOR);
-			
+			addVendedor(PRACTICAS, in, TipoVendedor.JUNIOR);
+
 			addVendedorPracticas(in);
 		} catch (FileNotFoundException e) {		// WMC + 1  CCog + 1
-		} finally {
-			if (in != null) {  // WMC + 1  CCog + 1
-				in.close();
-			}
-		} // try
+		} 
 
 		for (Vendedor v : lista) { 		// WMC + 1 CCog + 1
 			if (v.getId().equals(id)) { // WMC + 1  CCog + 2
@@ -157,12 +155,10 @@ public class Tienda {
 	 * @return La lista de vendedores
 	 */
 	public List<Vendedor> vendedores() {		// WMC + 1
-		lista = new LinkedList<Vendedor>();
+		lista = new LinkedList<>();
 
-		Scanner in = null;
-		try {
-			// abre el fichero
-			in = new Scanner(new FileReader(datos));
+		// abre el fichero
+		try (Scanner in = new Scanner(new FileReader(datos))) {
 			// configura el formato de n�meros
 			in.useLocale(Locale.ENGLISH);
 			nombre = in.nextLine();
@@ -170,18 +166,14 @@ public class Tienda {
 			in.next();
 
 			// lee los vendedores senior
-			addVendedor("Junior", in, TipoVendedor.SENIOR);
+			addVendedor(JUNIOR, in, TipoVendedor.SENIOR);
 			// lee los vendedores junior
-			addVendedor("Pr�cticas", in, TipoVendedor.JUNIOR);
-			
+			addVendedor(PRACTICAS, in, TipoVendedor.JUNIOR);
+
 			addVendedorPracticas(in);
 		} catch (FileNotFoundException e) {		// WMC + 1 CCog + 1
-
-		} finally {
-			if (in != null) { // WMC + 1 CCog + 1
-				in.close();
-			}
-		} // try
+		
+		} 
 
 		return lista;
 
@@ -190,31 +182,31 @@ public class Tienda {
 	private void addVendedor(String vendedor, Scanner in, TipoVendedor tipo) {		// WMC + 1
 		Vendedor ven = null;
 		while (in.hasNext() && !in.next().equals(vendedor)) {		// WMC + 1 CCog + 1
-			String nombre = in.next();
+			String name = in.next();
 			in.next();
 			String idIn = in.next();
 			in.next();
 			String dni= in.next();
 			in.next();
 			double totalVentas = in.nextDouble();
-			ven = new VendedorEnPlantilla(nombre, idIn, dni, tipo);
+			ven = new VendedorEnPlantilla(name, idIn, dni, tipo);
 			ven.setT(totalVentas);
 			lista.add(ven);
 		}
 	}
-	
+
 	private void addVendedorPracticas(Scanner in) {		// WMC + 1 
 		Vendedor ven;
 		while (in.hasNext()) {		// WMC + 1 CCog + 1
 			in.next();
-			String nombre = in.next();
+			String name = in.next();
 			in.next();
 			String idIn = in.next();
 			in.next();
 			String dni= in.next();
 			in.next();
 			double totalVentas = in.nextDouble();
-			ven = new vendedorEnPracticas(nombre, idIn, dni);
+			ven = new vendedorEnPracticas(name, idIn, dni);
 			ven.setT(totalVentas);
 			lista.add(ven);
 		}
@@ -225,10 +217,9 @@ public class Tienda {
 	 * con los datos actualizados de los vendedores
 	 */
 	private void vuelcaDatos() throws IOException {		// WMC + 1
-		PrintWriter out = null;
-		List<Vendedor> senior = new LinkedList<Vendedor>();
-		List<Vendedor> junior = new LinkedList<Vendedor>();
-		List<Vendedor> practicas = new LinkedList<Vendedor>();
+		List<Vendedor> senior = new LinkedList<>();
+		List<Vendedor> junior = new LinkedList<>();
+		List<Vendedor> practicas = new LinkedList<>();
 
 		for (Vendedor v : lista) {		// WMC + 1 CCog + 1
 			if (v instanceof vendedorEnPracticas) {		// WMC + 1 CCog + 2
@@ -242,9 +233,7 @@ public class Tienda {
 			}
 		}
 
-		try {
-
-			out = new PrintWriter(new FileWriter(datos));
+		try (PrintWriter out = new PrintWriter(new FileWriter(datos))) {
 
 			out.println(nombre);
 			out.println(direccion);
@@ -252,19 +241,16 @@ public class Tienda {
 			out.println("Senior");
 			printer(out, senior);
 			out.println();
-			out.println("Junior");
+			out.println(JUNIOR);
 			printer(out, junior);
 			out.println();
-			out.println("Pr�cticas");
+			out.println(PRACTICAS);
 			for (Vendedor v : practicas) {		// WMC + 1 CCog + 1
 				vendedorEnPracticas v3 = (vendedorEnPracticas) v;
 				out.println("  Nombre: " + v3.getNombre() + " Id: " + v3.getId() + " DNI: "+ v3.getDni()+" TotalVentasMes: "
 						+ v3.getTotalVentas());
 			}
 
-		} finally {
-			if (out != null) // WMC + 1 CCog + 1
-				out.close();
 		}
 	}
 
